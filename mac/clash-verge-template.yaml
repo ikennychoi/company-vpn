@@ -1,0 +1,141 @@
+# Clash Verge (Mihomo) 配置模板（公开，不含真实密钥）
+#
+# 日常请直接使用 Kenny 发给你的个人 yaml，一般不必编辑本模板。
+# 若必须自己填写，请把下面占位符换成 Kenny 单独告诉你的值：
+#   <服务器地址>  <你的UUID>  <REALITY公钥>  <short-id>
+# 不要把填好密钥的文件发到公开仓库或群里。
+#
+# 建议：Clash Verge Rev 2.5.10+，内核需支持 VLESS + REALITY + xtls-rprx-vision。
+
+mixed-port: 7890
+allow-lan: false
+bind-address: 127.0.0.1
+mode: rule
+log-level: info
+ipv6: false
+unified-delay: true
+find-process-mode: always
+
+dns:
+  enable: true
+  listen: 127.0.0.1:1053
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - '*.163.com'
+    - '*.126.com'
+    - '*.126.net'
+    - '*.127.net'
+    - '*.163yun.com'
+    - '*.netease.com'
+    - '*.netease.im'
+    - '*.lan'
+    - '*.local'
+    - localhost
+    - '*.localdomain'
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+  respect-rules: true
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+    - 223.5.5.5
+
+proxies:
+  - name: Company-VPN
+    type: vless
+    server: <服务器地址>
+    port: 443
+    uuid: <你的UUID>
+    network: tcp
+    udp: true
+    tls: true
+    flow: xtls-rprx-vision
+    servername: www.ebay.com
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: <REALITY公钥>
+      short-id: <short-id>
+      support-x25519mlkem768: true
+
+proxy-groups:
+  - name: PROXY
+    type: select
+    proxies:
+      - Company-VPN
+  - name: FINAL
+    type: select
+    proxies:
+      - PROXY
+      - DIRECT
+
+rules:
+  # 网易 UU 远程：进程和域名直连，避免远程桌面被代理干扰
+  - PROCESS-NAME,UURemote,DIRECT
+  - PROCESS-NAME,UURemoteServer,DIRECT
+  - PROCESS-NAME,UURemoteDaemon,DIRECT
+  - PROCESS-NAME,UURemoteService,DIRECT
+  - PROCESS-NAME,UURemoteHelper,DIRECT
+  - DOMAIN-SUFFIX,163.com,DIRECT
+  - DOMAIN-SUFFIX,126.com,DIRECT
+  - DOMAIN-SUFFIX,126.net,DIRECT
+  - DOMAIN-SUFFIX,127.net,DIRECT
+  - DOMAIN-SUFFIX,163yun.com,DIRECT
+  - DOMAIN-SUFFIX,netease.com,DIRECT
+  - DOMAIN-SUFFIX,netease.im,DIRECT
+  - DOMAIN-KEYWORD,uuremote,DIRECT
+  - DOMAIN-KEYWORD,uuyc,DIRECT
+  - DOMAIN-SUFFIX,local,DIRECT
+  - DOMAIN-SUFFIX,localhost,DIRECT
+  - IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
+  - IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
+  - IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,169.254.0.0/16,DIRECT,no-resolve
+  - IP-CIDR,224.0.0.0/4,DIRECT,no-resolve
+  - IP-CIDR6,::1/128,DIRECT,no-resolve
+  - IP-CIDR6,fc00::/7,DIRECT,no-resolve
+  - IP-CIDR6,fe80::/10,DIRECT,no-resolve
+  # 常见查 IP 网站走代理，避免命中下面的国内直连而显示真实城市
+  - DOMAIN-SUFFIX,ip138.com,PROXY
+  - DOMAIN-SUFFIX,ippure.com,PROXY
+  - DOMAIN-SUFFIX,ipip.net,PROXY
+  - DOMAIN-SUFFIX,cip.cc,PROXY
+  - DOMAIN-SUFFIX,ip111.cn,PROXY
+  - DOMAIN-SUFFIX,ipw.cn,PROXY
+  - DOMAIN-SUFFIX,ip.cn,PROXY
+  - DOMAIN-SUFFIX,ip.cn.com,PROXY
+  - DOMAIN-SUFFIX,chinaz.com,PROXY
+  - DOMAIN-SUFFIX,ipchaxun.com,PROXY
+  - DOMAIN-SUFFIX,ping0.cc,PROXY
+  - DOMAIN-SUFFIX,ip-api.com,PROXY
+  - DOMAIN-SUFFIX,ipinfo.io,PROXY
+  - DOMAIN-SUFFIX,ipify.org,PROXY
+  - DOMAIN-SUFFIX,ifconfig.me,PROXY
+  - DOMAIN-SUFFIX,ifconfig.co,PROXY
+  - DOMAIN-SUFFIX,icanhazip.com,PROXY
+  - DOMAIN-SUFFIX,ident.me,PROXY
+  - DOMAIN-SUFFIX,ip.me,PROXY
+  - DOMAIN-SUFFIX,ip.sb,PROXY
+  - DOMAIN-SUFFIX,seeip.org,PROXY
+  - DOMAIN-SUFFIX,ipleak.net,PROXY
+  - DOMAIN-SUFFIX,whatismyip.com,PROXY
+  - DOMAIN-SUFFIX,whatismyipaddress.com,PROXY
+  - DOMAIN-SUFFIX,iplocation.net,PROXY
+  - DOMAIN-SUFFIX,checkip.amazonaws.com,PROXY
+  - GEOSITE,private,DIRECT
+  - GEOSITE,cn,DIRECT
+  - GEOIP,CN,DIRECT
+  - MATCH,FINAL

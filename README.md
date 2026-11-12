@@ -1,20 +1,65 @@
-# Company Shadowrocket routing rules
+# 公司网络访问说明
 
-Public routing rules for Shadowrocket. This repository contains **no node credentials**, UUIDs, keys, or server addresses.
+这份公开仓库只放**安装教程**和**通用分流规则**，不含任何人的节点密钥。
 
-- File: `company-vpn-shadowrocket-rules.conf`
-- Domestic / private networks go DIRECT; listed IP-check sites and other foreign traffic go through the currently selected node.
+每位同事还会从负责人（Kenny）那里**私下**收到自己的专属文件，请不要和其他人交换：
 
-## Import in Shadowrocket
+- **iPhone（Shadowrocket）**：你自己的合并二维码（左侧是你的节点，右侧是所有人通用的规则）。
+- **Mac（Clash Verge Rev）**：一份已经填好的个人配置文件，例如 `clash-verge-user01.yaml`。
 
-1. Add your personal node first (scan your own node QR; do not share it).
-2. Scan the rules QR, or in Shadowrocket go to **Config → + → Download from URL** and paste:
+把仓库和私人文件合在一起，就可以在 Mac 和 iPhone 上完成设置。
 
-   `https://cdn.jsdelivr.net/gh/ikennychoi/company-shadowrocket-rules@main/company-vpn-shadowrocket-rules.conf`
+仓库地址：https://github.com/ikennychoi/company-shadowrocket-rules
 
-3. Tap the downloaded config and choose **Use Configuration**.
-4. Select your personal node, then connect.
+## 使用前请先确认
 
-If jsDelivr is slow to update after a change, the same file is also at:
+1. 已经从 Kenny 那里拿到**只属于你自己**的节点二维码或 Clash 配置，编号（如 user01）没有拿错。
+2. 手机已安装 [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)（App Store，付费应用）。
+3. Mac 准备安装 Clash Verge Rev（免费，见下方教程）。
+4. 同一台电脑上不要同时开两个系统代理或两个虚拟网卡（例如 Clash Verge 和 ClashX 不要一起接管网络）。
 
-`https://raw.githubusercontent.com/ikennychoi/company-shadowrocket-rules/main/company-vpn-shadowrocket-rules.conf`
+## 快速开始
+
+### 在 iPhone 上
+
+1. 打开 Shadowrocket，扫描合并图**左侧**「① 节点（仅本人）」。
+2. 再扫描**右侧**「② 规则配置（所有人通用）」。
+3. 到「配置」页，点刚下载的配置，选择「使用配置」。
+4. 回到首页，选中第 1 步添加的节点，打开连接；全局路由选「配置」。
+
+详细步骤和备用方法见：[iphone/Shadowrocket 使用说明.md](iphone/Shadowrocket%20使用说明.md)
+
+### 在 Mac 上
+
+1. 安装 Clash Verge Rev，并安装系统服务。见：[mac/安装 Clash Verge.md](mac/安装%20Clash%20Verge.md)
+2. 导入 Kenny 发给你的个人 yaml，打开「虚拟网卡模式」。见：[mac/导入配置与使用.md](mac/导入配置与使用.md)
+3. 用下面的方法确认已经走通。
+
+仓库里的 `mac/clash-verge-template.yaml` 只是模板，一般**不用自己改**。日常请直接用 Kenny 发给你的那份个人配置。
+
+## 常见问题
+
+**为什么用国内网站查 IP 会显示深圳等地，吓了一跳？**  
+国内直连是故意的：访问百度、微信等国内网站不走代理。像 ip138、ipip 这类国内查 IP 网站本身也在国内，所以会显示你的真实位置。请改用本配置里已设为走代理的查 IP 网站（例如 [ippure.com](https://ippure.com)），或确认国外网站能打开。看到美国等地的出口才是这条线路的结果。
+
+**可以同时开两个代理软件吗？**  
+不要。Clash Verge 的「系统代理」或「虚拟网卡模式」不要和 ClashX、其他 VPN、另一个 TUN 同时打开，否则会互相抢网络，表现为连不上或时好时坏。
+
+**怎样判断已经成功？**  
+- 打开 https://www.google.com 或常用的国外网站，应能打开。  
+- 打开百度等国内网站，应仍然正常（走直连）。  
+- 用 ippure.com 等查 IP，应显示国外出口，而不是你所在的国内城市。  
+- 终端里不需要再手动设置 `http_proxy`。若已打开虚拟网卡，`curl -I https://www.google.com` 一般也能通。
+
+**连不上怎么办？**  
+1. 确认用的是自己的配置，没有拿错别人的编号。  
+2. Mac：在「订阅」里已经点选了刚导入的配置；已打开「虚拟网卡模式」或「系统代理」（推荐前者）；没有同时开着别的代理。  
+3. iPhone：首页已选中刚扫码添加的节点，「配置」里已点「使用配置」，全局路由为「配置」。  
+4. 检查手机或电脑时间是否自动同步。时间不准会导致握手失败。  
+5. 仍不行时，把现象发给 Kenny（不要把二维码、yaml 或节点链接发到公开群）。
+
+## 安全提醒
+
+- 你的二维码和 Clash yaml 里有个人节点密钥，**不要转发给同事，也不要发到群里或网盘公开目录**。
+- 这份公开仓库可以分享；私人文件只能一对一发给对应的人。
+- 用完电脑如果把配置文件拷到别处，请同样当作密钥保管。
