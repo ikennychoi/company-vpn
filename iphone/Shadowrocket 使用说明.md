@@ -7,7 +7,7 @@
 
 规则文件地址（无凭据，国内可不走代理访问）：
 
-https://cdn.jsdelivr.net/gh/ikennychoi/company-shadowrocket-rules@main/company-vpn-shadowrocket-rules.conf
+https://cdn.jsdelivr.net/gh/ikennychoi/company-vpn@main/company-vpn-shadowrocket-rules.conf
 
 也可以直接扫描下面这张通用规则二维码（与合并图右侧相同）：
 

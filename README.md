@@ -9,13 +9,13 @@
 
 把仓库和私人文件合在一起，就可以在 Mac 和 iPhone 上完成设置。
 
-仓库地址：https://github.com/ikennychoi/company-shadowrocket-rules
+仓库地址：https://github.com/ikennychoi/company-vpn
 
 ## 使用前请先确认
 
 1. 已经从 Kenny 那里拿到**只属于你自己**的节点二维码或 Clash 配置，编号（如 user01）没有拿错。
 2. 手机已安装 [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)（App Store，付费应用）。
-3. Mac 准备安装 Clash Verge Rev（免费，见下方教程）。
+3. Mac 准备安装 Clash Verge Rev（免费，见下方教程）。安装后必须先完成系统服务 /「授权」，再打开「虚拟网卡模式」（TUN）。
 4. 同一台电脑上不要同时开两个系统代理或两个虚拟网卡（例如 Clash Verge 和 ClashX 不要一起接管网络）。
 
 ## 快速开始
@@ -31,9 +31,11 @@
 
 ### 在 Mac 上
 
-1. 安装 Clash Verge Rev，并安装系统服务。见：[mac/安装 Clash Verge.md](mac/安装%20Clash%20Verge.md)
-2. 导入 Kenny 发给你的个人 yaml，打开「虚拟网卡模式」。见：[mac/导入配置与使用.md](mac/导入配置与使用.md)
-3. 用下面的方法确认已经走通。
+1. 安装 Clash Verge Rev，并先安装系统服务（或在内核旁点「授权」）。见：[mac/安装 Clash Verge.md](mac/安装%20Clash%20Verge.md)
+2. 导入 Kenny 发给你的个人 yaml，并在列表里选中它。见：[mac/导入配置与使用.md](mac/导入配置与使用.md)
+3. **必须打开「虚拟网卡模式」（TUN）**。打开前先完成上一步的系统服务 / 授权。「系统代理」可以关掉，不是必需的。
+   打开 TUN 后，浏览器、其他 App 和终端都会走代理，不必再手动设置 `http_proxy`。
+4. 用下面的方法确认已经走通（请包含终端里的 `curl` 检查）。
 
 仓库里的 `mac/clash-verge-template.yaml` 只是模板，一般**不用自己改**。日常请直接用 Kenny 发给你的那份个人配置。
 
@@ -49,11 +51,11 @@
 - 打开 https://www.google.com 或常用的国外网站，应能打开。  
 - 打开百度等国内网站，应仍然正常（走直连）。  
 - 用 ippure.com 等查 IP，应显示国外出口，而不是你所在的国内城市。  
-- 终端里不需要再手动设置 `http_proxy`。若已打开虚拟网卡，`curl -I https://www.google.com` 一般也能通。
+- 终端里不需要再手动设置 `http_proxy`。打开「虚拟网卡模式」后，执行 `curl -I --max-time 15 https://www.google.com` 应能返回 HTTP 头。这是确认 TUN 已生效的方法。
 
 **连不上怎么办？**  
 1. 确认用的是自己的配置，没有拿错别人的编号。  
-2. Mac：在「订阅」里已经点选了刚导入的配置；已打开「虚拟网卡模式」或「系统代理」（推荐前者）；没有同时开着别的代理。  
+2. Mac：在「订阅」里已经点选了刚导入的配置；系统服务已安装；「虚拟网卡模式」已打开；没有同时开着别的代理。「系统代理」不是必需的，可保持关闭。  
 3. iPhone：首页已选中刚扫码添加的节点，「配置」里已点「使用配置」，全局路由为「配置」。  
 4. 检查手机或电脑时间是否自动同步。时间不准会导致握手失败。  
 5. 仍不行时，把现象发给 Kenny（不要把二维码、yaml 或节点链接发到公开群）。

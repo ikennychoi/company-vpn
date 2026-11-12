@@ -61,6 +61,6 @@ sudo "$APP/Contents/Resources/resources/clash-verge-service-uninstall"
 sudo "$APP/Contents/Resources/resources/clash-verge-service-install"
 ```
 
-命令执行完后重新打开 Clash Verge，再去开「虚拟网卡模式」。
+命令执行完后重新打开 Clash Verge，再去开「虚拟网卡模式」。开 TUN 是后面必做的一步，系统代理不是必需的。
 
 下一步请看：[导入配置与使用.md](导入配置与使用.md)
